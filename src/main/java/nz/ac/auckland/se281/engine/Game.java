@@ -2,6 +2,7 @@ package nz.ac.auckland.se281.engine;
 
 import nz.ac.auckland.se281.Main.Difficulty;
 import nz.ac.auckland.se281.cli.MessageCli;
+import nz.ac.auckland.se281.cli.Utils;
 import nz.ac.auckland.se281.model.Colour;
 
 public class Game {
@@ -38,16 +39,19 @@ public class Game {
       return;
     }
 
-    if (this.thisRound > totalRounds) {
+    if (this.thisRound > this.totalRounds) {
       MessageCli.PRINT_END_GAME.printMessage();
       return;
     }
 
     MessageCli.START_ROUND.printMessage(
         String.valueOf(this.thisRound), String.valueOf(this.totalRounds));
+    this.thisRound++;
 
-    thisRound++;
+    MessageCli.ASK_HUMAN_INPUT.printMessage();
   }
 
   public void showStats() {}
+
+  String inputLine = Utils.scanner.nextLine();
 }
