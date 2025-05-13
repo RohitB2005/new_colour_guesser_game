@@ -2,6 +2,7 @@ package nz.ac.auckland.se281.engine;
 
 import nz.ac.auckland.se281.Main.Difficulty;
 import nz.ac.auckland.se281.cli.MessageCli;
+import nz.ac.auckland.se281.model.Colour;
 
 public class Game {
 
@@ -9,6 +10,9 @@ public class Game {
   private int totalRounds;
   private String namePlayer;
   private boolean gameInProgress;
+
+  private Colour chosenColour;
+  private Colour guessedColour;
 
   public static String AI_NAME = "HAL-9000";
 
@@ -23,6 +27,8 @@ public class Game {
     this.totalRounds = numRounds;
     this.thisRound = 1;
     this.gameInProgress = true;
+    this.chosenColour = null;
+    this.guessedColour = null;
   }
 
   public void play() {
@@ -32,9 +38,13 @@ public class Game {
       return;
     }
 
-    if (thisRound > totalRounds) {
+    if (this.thisRound == totalRounds) {
       MessageCli.PRINT_END_GAME.printMessage();
+      return;
     }
+
+    MessageCli.START_ROUND.printMessage(
+        String.valueOf(this.thisRound), String.valueOf(this.totalRounds));
 
     thisRound++;
   }
