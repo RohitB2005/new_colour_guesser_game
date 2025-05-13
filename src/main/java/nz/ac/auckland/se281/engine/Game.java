@@ -72,6 +72,10 @@ public class Game {
       MessageCli.PRINT_INFO_MOVE.printMessage(
           this.namePlayer, this.chosenColour, this.guessedColour);
 
+      Colour halChosenColour = Colour.getRandomColourForAi();
+      Colour halGuessedColour = Colour.getRandomColourForAi();
+      MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, halChosenColour, halGuessedColour);
+
       if (this.thisRound % 3 == 0) {
         Colour powerColour = Colour.getRandomColourForPowerColour();
         MessageCli.PRINT_POWER_COLOUR.printMessage(powerColour);
