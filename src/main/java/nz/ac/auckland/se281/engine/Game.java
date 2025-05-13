@@ -46,28 +46,34 @@ public class Game {
 
     MessageCli.START_ROUND.printMessage(
         String.valueOf(this.thisRound), String.valueOf(this.totalRounds));
-    this.thisRound++;
 
-    MessageCli.ASK_HUMAN_INPUT.printMessage();
+    while (true) {
+      MessageCli.ASK_HUMAN_INPUT.printMessage();
 
-    String input = Utils.scanner.nextLine();
-    String[] colourInputs = input.trim().split(" ");
+      String input = Utils.scanner.nextLine();
+      String[] colourInputs = input.trim().split(" ");
 
-    if (colourInputs.length != 2) {
-      MessageCli.INVALID_HUMAN_INPUT.printMessage();
+      if (colourInputs.length != 2) {
+        MessageCli.INVALID_HUMAN_INPUT.printMessage();
+        continue;
+      }
+
+      Colour chosenColour = Colour.fromInput(colourInputs[0]);
+      Colour guessedColour = Colour.fromInput(colourInputs[1]);
+
+      if (chosenColour == null || guessedColour == null) {
+        MessageCli.INVALID_HUMAN_INPUT.printMessage();
+        continue;
+      }
+
+      this.chosenColour = chosenColour;
+      this.guessedColour = guessedColour;
+
+      MessageCli.PRINT_INFO_MOVE.printMessage(
+          this.namePlayer, this.chosenColour, this.guessedColour);
+      this.thisRound++;
+      break;
     }
-
-    Colour chosenColour = Colour.fromInput(colourInputs[0]);
-    Colour guessedColour = Colour.fromInput(colourInputs[1]);
-
-    if (chosenColour == null || guessedColour == null) {
-      MessageCli.INVALID_HUMAN_INPUT.printMessage();
-    }
-
-    this.chosenColour = chosenColour;
-    this.guessedColour = guessedColour;
-
-    MessageCli.PRINT_INFO_MOVE.printMessage(this.namePlayer, this.chosenColour, this.guessedColour);
   }
 
   public void showStats() {}
