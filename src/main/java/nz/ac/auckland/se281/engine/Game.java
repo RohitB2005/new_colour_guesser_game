@@ -53,7 +53,7 @@ public class Game {
     String input = Utils.scanner.nextLine();
     String[] colourInputs = input.trim().split(" ");
 
-    if (input.length() != 2) {
+    if (colourInputs.length != 2) {
       MessageCli.INVALID_HUMAN_INPUT.printMessage();
     }
 
