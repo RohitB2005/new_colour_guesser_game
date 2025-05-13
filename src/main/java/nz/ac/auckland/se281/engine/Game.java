@@ -14,6 +14,9 @@ public class Game {
 
   private Colour chosenColour;
   private Colour guessedColour;
+  private Colour halChosenColour;
+  private Colour halGuessedColour;
+  private Colour powerColour;
 
   public static String AI_NAME = "HAL-9000";
 
@@ -68,18 +71,39 @@ public class Game {
 
       this.chosenColour = chosenColour;
       this.guessedColour = guessedColour;
+      this.halChosenColour = Colour.getRandomColourForAi();
+      this.halGuessedColour = Colour.getRandomColourForAi();
 
       MessageCli.PRINT_INFO_MOVE.printMessage(
           this.namePlayer, this.chosenColour, this.guessedColour);
 
-      Colour halChosenColour = Colour.getRandomColourForAi();
-      Colour halGuessedColour = Colour.getRandomColourForAi();
-      MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, halChosenColour, halGuessedColour);
+      MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, this.halChosenColour, this.halGuessedColour);
 
       if (this.thisRound % 3 == 0) {
-        Colour powerColour = Colour.getRandomColourForPowerColour();
-        MessageCli.PRINT_POWER_COLOUR.printMessage(powerColour);
+        this.powerColour = Colour.getRandomColourForPowerColour();
+        MessageCli.PRINT_POWER_COLOUR.printMessage(this.powerColour);
       }
+
+      int playerScore = 0;
+      int halScore = 0;
+
+      if (this.guessedColour == halChosenColour) {
+        playerScore += 1;
+        if (this.guessedColour == this.powerColour) {
+          playerScore += 2;
+        }
+      }
+
+      if (halGuessedColour == this.chosenColour) {
+        halScore += 1;
+        if (halGuessedColour == this.powerColour) {
+          halScore += 2;
+        }
+      }
+
+      MessageCli.PRINT_OUTCOME_ROUND.printMessage(this.namePlayer, String.valueOf(playerScore));
+
+      MessageCli.PRINT_OUTCOME_ROUND.printMessage(AI_NAME, String.valueOf(halScore));
       this.thisRound++;
       break;
     }
