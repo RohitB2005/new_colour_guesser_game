@@ -49,9 +49,26 @@ public class Game {
     this.thisRound++;
 
     MessageCli.ASK_HUMAN_INPUT.printMessage();
+
+    String input = Utils.scanner.nextLine();
+    String[] colourInputs = input.trim().split(" ");
+
+    if (input.length() != 2) {
+      MessageCli.INVALID_HUMAN_INPUT.printMessage();
+    }
+
+    Colour chosenColour = Colour.fromInput(colourInputs[0]);
+    Colour guessedColour = Colour.fromInput(colourInputs[1]);
+
+    if (chosenColour == null || guessedColour == null) {
+      MessageCli.INVALID_HUMAN_INPUT.printMessage();
+    }
+
+    this.chosenColour = chosenColour;
+    this.guessedColour = guessedColour;
+
+    MessageCli.PRINT_INFO_MOVE.printMessage(this.namePlayer, this.chosenColour, this.guessedColour);
   }
 
   public void showStats() {}
-
-  String inputLine = Utils.scanner.nextLine();
 }
