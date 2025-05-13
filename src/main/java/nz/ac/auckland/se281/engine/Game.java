@@ -38,7 +38,7 @@ public class Game {
       return;
     }
 
-    if (this.thisRound == totalRounds) {
+    if (this.thisRound > totalRounds) {
       MessageCli.PRINT_END_GAME.printMessage();
       return;
     }
