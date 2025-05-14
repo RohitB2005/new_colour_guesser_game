@@ -3,6 +3,7 @@ package nz.ac.auckland.se281.engine;
 import nz.ac.auckland.se281.Main.Difficulty;
 import nz.ac.auckland.se281.cli.MessageCli;
 import nz.ac.auckland.se281.model.Colour;
+import nz.ac.auckland.se281.players.AiPlayer;
 import nz.ac.auckland.se281.players.Factory;
 import nz.ac.auckland.se281.players.HumanPlayer;
 import nz.ac.auckland.se281.players.Players;
@@ -14,9 +15,12 @@ public class Game {
   private boolean gameInProgress;
 
   private Players humanPlayer;
-  private Players AiPlayer;
+  private AiPlayer AiPlayer;
 
   private Colour powerColour;
+
+  private Difficulty thisDifficulty;
+  private Colour humanPreviousChoice;
 
   private int humanScore;
   private int AiScore;
@@ -24,18 +28,21 @@ public class Game {
   public Game() {
     this.thisRound = 1;
     this.gameInProgress = false;
+    this.humanPreviousChoice = null;
   }
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
     this.humanPlayer = new HumanPlayer(options[0]);
     this.AiPlayer = Factory.aiConstructor(difficulty);
+
     MessageCli.WELCOME_PLAYER.printMessage(this.humanPlayer.getName());
+
     this.totalRounds = numRounds;
     this.thisRound = 1;
     this.gameInProgress = true;
 
-    this.humanScore = 0;
-    this.AiScore = 0;
+    this.thisDifficulty = difficulty;
+    this.humanPreviousChoice = null;
   }
 
   public void play() {
@@ -53,6 +60,10 @@ public class Game {
 
     MessageCli.START_ROUND.printMessage(
         String.valueOf(this.thisRound), String.valueOf(this.totalRounds));
+
+    if (this.thisDifficulty == Difficulty.MEDIUM) {
+      this.AiPlayer.getStrategy().setHumanPreviousChoice(this.humanPreviousChoice);
+    }
 
     this.humanPlayer.getChoices(this);
     this.AiPlayer.getChoices(this);
@@ -97,6 +108,7 @@ public class Game {
 
     MessageCli.PRINT_OUTCOME_ROUND.printMessage(this.AiPlayer.getName(), String.valueOf(aiScore));
     this.thisRound++;
+    this.humanPreviousChoice = humanChoice;
   }
 
   public void showStats() {}
