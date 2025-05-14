@@ -2,23 +2,24 @@ package nz.ac.auckland.se281.engine;
 
 import nz.ac.auckland.se281.Main.Difficulty;
 import nz.ac.auckland.se281.cli.MessageCli;
-import nz.ac.auckland.se281.cli.Utils;
 import nz.ac.auckland.se281.model.Colour;
+import nz.ac.auckland.se281.players.Factory;
+import nz.ac.auckland.se281.players.HumanPlayer;
+import nz.ac.auckland.se281.players.Players;
 
 public class Game {
 
   private int thisRound;
   private int totalRounds;
-  private String namePlayer;
   private boolean gameInProgress;
 
-  private Colour chosenColour;
-  private Colour guessedColour;
-  private Colour halChosenColour;
-  private Colour halGuessedColour;
+  private Players humanPlayer;
+  private Players AiPlayer;
+
   private Colour powerColour;
 
-  public static String AI_NAME = "HAL-9000";
+  private int humanScore;
+  private int AiScore;
 
   public Game() {
     this.thisRound = 1;
@@ -26,13 +27,15 @@ public class Game {
   }
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
-    this.namePlayer = options[0];
-    MessageCli.WELCOME_PLAYER.printMessage(this.namePlayer);
+    this.humanPlayer = new HumanPlayer(options[0]);
+    this.AiPlayer = Factory.aiConstructor(difficulty);
+    MessageCli.WELCOME_PLAYER.printMessage(this.humanPlayer.getName());
     this.totalRounds = numRounds;
     this.thisRound = 1;
     this.gameInProgress = true;
-    this.chosenColour = null;
-    this.guessedColour = null;
+
+    this.humanScore = 0;
+    this.AiScore = 0;
   }
 
   public void play() {
@@ -44,69 +47,56 @@ public class Game {
 
     if (this.thisRound > this.totalRounds) {
       MessageCli.PRINT_END_GAME.printMessage();
+      this.gameInProgress = false;
       return;
     }
 
     MessageCli.START_ROUND.printMessage(
         String.valueOf(this.thisRound), String.valueOf(this.totalRounds));
 
-    while (true) {
-      MessageCli.ASK_HUMAN_INPUT.printMessage();
+    this.humanPlayer.getChoices(this);
+    this.AiPlayer.getChoices(this);
 
-      String input = Utils.scanner.nextLine();
-      String[] colourInputs = input.trim().split(" ");
+    Colour humanChoice = this.humanPlayer.chosenColour();
+    Colour humanGuess = this.humanPlayer.guessedColour();
 
-      if (colourInputs.length != 2) {
-        MessageCli.INVALID_HUMAN_INPUT.printMessage();
-        continue;
-      }
+    Colour aiChoice = this.AiPlayer.chosenColour();
+    Colour aiGuess = this.AiPlayer.guessedColour();
 
-      Colour chosenColour = Colour.fromInput(colourInputs[0]);
-      Colour guessedColour = Colour.fromInput(colourInputs[1]);
+    MessageCli.PRINT_INFO_MOVE.printMessage(this.humanPlayer.getName(), humanChoice, humanGuess);
 
-      if (chosenColour == null || guessedColour == null) {
-        MessageCli.INVALID_HUMAN_INPUT.printMessage();
-        continue;
-      }
+    MessageCli.PRINT_INFO_MOVE.printMessage(this.AiPlayer.getName(), aiChoice, aiGuess);
 
-      this.chosenColour = chosenColour;
-      this.guessedColour = guessedColour;
-      this.halChosenColour = Colour.getRandomColourForAi();
-      this.halGuessedColour = Colour.getRandomColourForAi();
-
-      MessageCli.PRINT_INFO_MOVE.printMessage(
-          this.namePlayer, this.chosenColour, this.guessedColour);
-
-      MessageCli.PRINT_INFO_MOVE.printMessage(AI_NAME, this.halChosenColour, this.halGuessedColour);
-
-      if (this.thisRound % 3 == 0) {
-        this.powerColour = Colour.getRandomColourForPowerColour();
-        MessageCli.PRINT_POWER_COLOUR.printMessage(this.powerColour);
-      }
-
-      int playerScore = 0;
-      int halScore = 0;
-
-      if (this.guessedColour == halChosenColour) {
-        playerScore += 1;
-        if (this.guessedColour == this.powerColour) {
-          playerScore += 2;
-        }
-      }
-
-      if (halGuessedColour == this.chosenColour) {
-        halScore += 1;
-        if (halGuessedColour == this.powerColour) {
-          halScore += 2;
-        }
-      }
-
-      MessageCli.PRINT_OUTCOME_ROUND.printMessage(this.namePlayer, String.valueOf(playerScore));
-
-      MessageCli.PRINT_OUTCOME_ROUND.printMessage(AI_NAME, String.valueOf(halScore));
-      this.thisRound++;
-      break;
+    if (this.thisRound % 3 == 0) {
+      this.powerColour = Colour.getRandomColourForPowerColour();
+      MessageCli.PRINT_POWER_COLOUR.printMessage(this.powerColour);
     }
+
+    int humanScore = 0;
+    int aiScore = 0;
+
+    if (humanGuess == aiChoice) {
+      humanScore += 1;
+      if (humanGuess == this.powerColour) {
+        humanScore += 2;
+      }
+    }
+
+    if (aiGuess == humanChoice) {
+      aiScore += 1;
+      if (aiGuess == this.powerColour) {
+        aiScore += 2;
+      }
+
+      this.humanPlayer.addPoints(humanScore);
+      this.AiPlayer.addPoints(aiScore);
+    }
+
+    MessageCli.PRINT_OUTCOME_ROUND.printMessage(
+        this.humanPlayer.getName(), String.valueOf(humanScore));
+
+    MessageCli.PRINT_OUTCOME_ROUND.printMessage(this.AiPlayer.getName(), String.valueOf(aiScore));
+    this.thisRound++;
   }
 
   public void showStats() {}
