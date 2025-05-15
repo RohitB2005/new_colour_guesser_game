@@ -62,12 +62,6 @@ public class Game {
       return;
     }
 
-    if (this.thisRound > this.totalRounds) {
-      MessageCli.PRINT_END_GAME.printMessage();
-      this.gameInProgress = false;
-      return;
-    }
-
     MessageCli.START_ROUND.printMessage(
         String.valueOf(this.thisRound), String.valueOf(this.totalRounds));
 
@@ -152,6 +146,30 @@ public class Game {
     MessageCli.PRINT_OUTCOME_ROUND.printMessage(this.AiPlayer.getName(), String.valueOf(aiScore));
     this.thisRound++;
     this.humanPreviousChoice = humanChoice;
+
+    if (this.thisRound > this.totalRounds) {
+      printEndingStats();
+      this.gameInProgress = false;
+      return;
+    }
+  }
+
+  private void printEndingStats() {
+    MessageCli.PRINT_END_GAME.printMessage();
+
+    MessageCli.PRINT_PLAYER_POINTS.printMessage(
+        this.humanPlayer.getName(), Integer.valueOf(this.humanPlayer.getScore()));
+
+    MessageCli.PRINT_PLAYER_POINTS.printMessage(
+        this.AiPlayer.getName(), Integer.valueOf(this.AiPlayer.getScore()));
+
+    if (this.humanPlayer.getScore() == this.AiPlayer.getScore()) {
+      MessageCli.PRINT_TIE_GAME.printMessage();
+    } else if (this.humanPlayer.getScore() < this.AiPlayer.getScore()) {
+      MessageCli.PRINT_WINNER_GAME.printMessage(this.AiPlayer.getName());
+    } else {
+      MessageCli.PRINT_WINNER_GAME.printMessage(this.humanPlayer.getName());
+    }
   }
 
   public void showStats() {
