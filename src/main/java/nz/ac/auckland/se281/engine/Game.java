@@ -35,6 +35,7 @@ public class Game {
     this.gameInProgress = false;
     this.humanPreviousChoice = null;
     this.history = new ArrayList<>();
+    this.pointsScored = false;
   }
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
@@ -50,6 +51,7 @@ public class Game {
     this.thisDifficulty = difficulty;
     this.humanPreviousChoice = null;
     this.history.clear();
+    this.pointsScored = false;
     this.usedStrategy = "Random";
   }
 
@@ -81,7 +83,7 @@ public class Game {
         AiPlayer.setStrategy(new LeastUsedStrategy());
         usedStrategy = "LeastUsed";
       } else {
-        if (pointsScored == false) {
+        if (this.pointsScored == false) {
           if (usedStrategy.equals("LeastUsed")) {
             AiPlayer.setStrategy(new AvoidLastStrategy());
             usedStrategy = "AvoidLast";
@@ -89,9 +91,6 @@ public class Game {
             AiPlayer.setStrategy(new LeastUsedStrategy());
             usedStrategy = "LeastUsed";
           }
-        } else {
-          AiPlayer.setStrategy(new LeastUsedStrategy());
-          usedStrategy = "LeastUsed";
         }
       }
 
@@ -121,26 +120,26 @@ public class Game {
     if (this.thisRound % 3 == 0) {
       this.powerColour = Colour.getRandomColourForPowerColour();
       MessageCli.PRINT_POWER_COLOUR.printMessage(this.powerColour);
+    } else {
+      this.powerColour = null;
     }
 
     int humanScore = 0;
     int aiScore = 0;
+    this.pointsScored = false;
 
     if (humanGuess == aiChoice) {
       humanScore += 1;
-      pointsScored = false;
       if (humanGuess == this.powerColour) {
         humanScore += 2;
-        pointsScored = false;
       }
     }
 
     if (aiGuess == humanChoice) {
       aiScore += 1;
-      pointsScored = true;
+      this.pointsScored = true;
       if (aiGuess == this.powerColour) {
         aiScore += 2;
-        pointsScored = true;
       }
     }
 

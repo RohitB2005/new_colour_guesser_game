@@ -51,10 +51,10 @@ public class LeastUsedStrategy implements Strategies {
 
     if (leastUsed == countRed) {
       return Colour.RED;
-    } else if (leastUsed == countBlue) {
-      return Colour.BLUE;
     } else if (leastUsed == countGreen) {
       return Colour.GREEN;
+    } else if (leastUsed == countBlue) {
+      return Colour.BLUE;
     } else {
       return Colour.YELLOW;
     }
