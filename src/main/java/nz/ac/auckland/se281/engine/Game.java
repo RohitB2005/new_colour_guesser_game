@@ -1,5 +1,6 @@
 package nz.ac.auckland.se281.engine;
 
+import java.util.ArrayList;
 import nz.ac.auckland.se281.Main.Difficulty;
 import nz.ac.auckland.se281.cli.MessageCli;
 import nz.ac.auckland.se281.model.Colour;
@@ -7,6 +8,7 @@ import nz.ac.auckland.se281.players.AiPlayer;
 import nz.ac.auckland.se281.players.Factory;
 import nz.ac.auckland.se281.players.HumanPlayer;
 import nz.ac.auckland.se281.players.Players;
+import nz.ac.auckland.se281.strategies.RandomStrategy;
 
 public class Game {
 
@@ -21,14 +23,13 @@ public class Game {
 
   private Difficulty thisDifficulty;
   private Colour humanPreviousChoice;
-
-  private int humanScore;
-  private int AiScore;
+  private ArrayList<Colour> history;
 
   public Game() {
     this.thisRound = 1;
     this.gameInProgress = false;
     this.humanPreviousChoice = null;
+    this.history = new ArrayList<>();
   }
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
@@ -43,6 +44,7 @@ public class Game {
 
     this.thisDifficulty = difficulty;
     this.humanPreviousChoice = null;
+    this.history.clear();
   }
 
   public void play() {
@@ -63,6 +65,13 @@ public class Game {
 
     if (this.thisDifficulty == Difficulty.MEDIUM) {
       this.AiPlayer.getStrategy().setHumanPreviousChoice(this.humanPreviousChoice);
+    }
+
+    if (this.thisDifficulty == Difficulty.HARD) {
+      if (this.thisRound == 1 || this.thisRound == 2) {
+        AiPlayer.setStrategy(new RandomStrategy());
+      }
+      this.AiPlayer.getStrategy().setColourHistory(this.history);
     }
 
     this.humanPlayer.getChoices(this);
