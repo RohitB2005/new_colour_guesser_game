@@ -8,6 +8,7 @@ import nz.ac.auckland.se281.players.AiPlayer;
 import nz.ac.auckland.se281.players.Factory;
 import nz.ac.auckland.se281.players.HumanPlayer;
 import nz.ac.auckland.se281.players.Players;
+import nz.ac.auckland.se281.strategies.LeastUsedStrategy;
 import nz.ac.auckland.se281.strategies.RandomStrategy;
 
 public class Game {
@@ -70,6 +71,8 @@ public class Game {
     if (this.thisDifficulty == Difficulty.HARD) {
       if (this.thisRound == 1 || this.thisRound == 2) {
         AiPlayer.setStrategy(new RandomStrategy());
+      } else if (this.thisRound == 3) {
+        AiPlayer.setStrategy(new LeastUsedStrategy());
       }
       this.AiPlayer.getStrategy().setColourHistory(this.history);
     }
@@ -79,6 +82,8 @@ public class Game {
 
     Colour humanChoice = this.humanPlayer.chosenColour();
     Colour humanGuess = this.humanPlayer.guessedColour();
+
+    this.history.add(humanChoice);
 
     Colour aiChoice = this.AiPlayer.chosenColour();
     Colour aiGuess = this.AiPlayer.guessedColour();
