@@ -18,7 +18,7 @@ import org.junit.runners.Suite.SuiteClasses;
   MainTest.Task2.class,
   MainTest.Task3.class,
   MainTest.Task4.class,
-  // MainTest.Task5.class
+  MainTest.Task5.class
 })
 public class MainTest {
 

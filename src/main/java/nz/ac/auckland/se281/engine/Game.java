@@ -154,5 +154,16 @@ public class Game {
     this.humanPreviousChoice = humanChoice;
   }
 
-  public void showStats() {}
+  public void showStats() {
+    if (!gameInProgress) {
+      MessageCli.GAME_NOT_STARTED.printMessage();
+      return;
+    }
+
+    MessageCli.PRINT_PLAYER_POINTS.printMessage(
+        this.humanPlayer.getName(), Integer.valueOf(this.humanPlayer.getScore()));
+
+    MessageCli.PRINT_PLAYER_POINTS.printMessage(
+        this.AiPlayer.getName(), Integer.valueOf(this.AiPlayer.getScore()));
+  }
 }
