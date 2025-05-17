@@ -6,6 +6,7 @@ public class AvoidLastStrategy implements Strategies {
 
   private Colour humanPreviousChoice;
 
+  @Override
   public void setHumanPreviousChoice(Colour choice) {
     this.humanPreviousChoice = choice;
   }

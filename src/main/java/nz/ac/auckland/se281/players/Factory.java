@@ -7,23 +7,23 @@ import nz.ac.auckland.se281.strategies.RandomStrategy;
 
 public class Factory {
 
-  public static AiPlayer aiConstructor(Difficulty difficulty) {
-    AiPlayer Ai = new AiPlayer();
+  public static AiPlayer constructAi(Difficulty difficulty) {
+    AiPlayer ai = new AiPlayer();
 
     switch (difficulty) {
       case EASY:
-        Ai.setStrategy(new RandomStrategy());
+        ai.setStrategy(new RandomStrategy());
         break;
 
       case MEDIUM:
-        Ai.setStrategy(new AvoidLastStrategy());
+        ai.setStrategy(new AvoidLastStrategy());
         break;
       case HARD:
-        Ai.setStrategy(new LeastUsedStrategy());
+        ai.setStrategy(new LeastUsedStrategy());
         break;
       default:
         break;
     }
-    return Ai;
+    return ai;
   }
 }

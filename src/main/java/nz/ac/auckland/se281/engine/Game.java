@@ -20,7 +20,7 @@ public class Game {
   private boolean gameInProgress;
 
   private Players humanPlayer;
-  private AiPlayer AiPlayer;
+  private AiPlayer aiPlayer;
 
   private Colour powerColour;
 
@@ -28,7 +28,7 @@ public class Game {
   private Colour humanPreviousChoice;
   private ArrayList<Colour> history;
   private String usedStrategy;
-  boolean pointsScored;
+  private boolean pointsScored;
 
   public Game() {
     this.thisRound = 1;
@@ -40,7 +40,7 @@ public class Game {
 
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
     this.humanPlayer = new HumanPlayer(options[0]);
-    this.AiPlayer = Factory.aiConstructor(difficulty);
+    this.aiPlayer = Factory.constructAi(difficulty);
 
     MessageCli.WELCOME_PLAYER.printMessage(this.humanPlayer.getName());
 
@@ -66,29 +66,29 @@ public class Game {
         String.valueOf(this.thisRound), String.valueOf(this.totalRounds));
 
     if (this.thisDifficulty == Difficulty.MEDIUM) {
-      this.AiPlayer.getStrategy().setHumanPreviousChoice(this.humanPreviousChoice);
+      this.aiPlayer.getStrategy().setHumanPreviousChoice(this.humanPreviousChoice);
     }
 
     if (this.thisDifficulty == Difficulty.HARD) {
       if (this.thisRound == 1 || this.thisRound == 2) {
-        AiPlayer.setStrategy(new RandomStrategy());
+        aiPlayer.setStrategy(new RandomStrategy());
         usedStrategy = "Random";
       } else if (this.thisRound == 3) {
-        AiPlayer.setStrategy(new LeastUsedStrategy());
+        aiPlayer.setStrategy(new LeastUsedStrategy());
         usedStrategy = "LeastUsed";
       } else {
         if (this.pointsScored == false) {
           if (usedStrategy.equals("LeastUsed")) {
-            AiPlayer.setStrategy(new AvoidLastStrategy());
+            aiPlayer.setStrategy(new AvoidLastStrategy());
             usedStrategy = "AvoidLast";
           } else if (usedStrategy.equals("AvoidLast")) {
-            AiPlayer.setStrategy(new LeastUsedStrategy());
+            aiPlayer.setStrategy(new LeastUsedStrategy());
             usedStrategy = "LeastUsed";
           }
         }
       }
 
-      Strategies currentStrategy = this.AiPlayer.getStrategy();
+      Strategies currentStrategy = this.aiPlayer.getStrategy();
       currentStrategy.setColourHistory(this.history);
 
       if (currentStrategy instanceof AvoidLastStrategy) {
@@ -97,19 +97,19 @@ public class Game {
     }
 
     this.humanPlayer.getChoices(this);
-    this.AiPlayer.getChoices(this);
+    this.aiPlayer.getChoices(this);
 
     Colour humanChoice = this.humanPlayer.chosenColour();
     Colour humanGuess = this.humanPlayer.guessedColour();
 
     this.history.add(humanChoice);
 
-    Colour aiChoice = this.AiPlayer.chosenColour();
-    Colour aiGuess = this.AiPlayer.guessedColour();
+    Colour aiChoice = this.aiPlayer.chosenColour();
+    Colour aiGuess = this.aiPlayer.guessedColour();
 
     MessageCli.PRINT_INFO_MOVE.printMessage(this.humanPlayer.getName(), humanChoice, humanGuess);
 
-    MessageCli.PRINT_INFO_MOVE.printMessage(this.AiPlayer.getName(), aiChoice, aiGuess);
+    MessageCli.PRINT_INFO_MOVE.printMessage(this.aiPlayer.getName(), aiChoice, aiGuess);
 
     if (this.thisRound % 3 == 0) {
       this.powerColour = Colour.getRandomColourForPowerColour();
@@ -138,19 +138,18 @@ public class Game {
     }
 
     this.humanPlayer.addPoints(humanScore);
-    this.AiPlayer.addPoints(aiScore);
+    this.aiPlayer.addPoints(aiScore);
 
     MessageCli.PRINT_OUTCOME_ROUND.printMessage(
         this.humanPlayer.getName(), String.valueOf(humanScore));
 
-    MessageCli.PRINT_OUTCOME_ROUND.printMessage(this.AiPlayer.getName(), String.valueOf(aiScore));
+    MessageCli.PRINT_OUTCOME_ROUND.printMessage(this.aiPlayer.getName(), String.valueOf(aiScore));
     this.thisRound++;
     this.humanPreviousChoice = humanChoice;
 
     if (this.thisRound > this.totalRounds) {
       printEndingStats();
       this.gameInProgress = false;
-      return;
     }
   }
 
@@ -161,12 +160,12 @@ public class Game {
         this.humanPlayer.getName(), Integer.valueOf(this.humanPlayer.getScore()));
 
     MessageCli.PRINT_PLAYER_POINTS.printMessage(
-        this.AiPlayer.getName(), Integer.valueOf(this.AiPlayer.getScore()));
+        this.aiPlayer.getName(), Integer.valueOf(this.aiPlayer.getScore()));
 
-    if (this.humanPlayer.getScore() == this.AiPlayer.getScore()) {
+    if (this.humanPlayer.getScore() == this.aiPlayer.getScore()) {
       MessageCli.PRINT_TIE_GAME.printMessage();
-    } else if (this.humanPlayer.getScore() < this.AiPlayer.getScore()) {
-      MessageCli.PRINT_WINNER_GAME.printMessage(this.AiPlayer.getName());
+    } else if (this.humanPlayer.getScore() < this.aiPlayer.getScore()) {
+      MessageCli.PRINT_WINNER_GAME.printMessage(this.aiPlayer.getName());
     } else {
       MessageCli.PRINT_WINNER_GAME.printMessage(this.humanPlayer.getName());
     }
@@ -182,6 +181,6 @@ public class Game {
         this.humanPlayer.getName(), Integer.valueOf(this.humanPlayer.getScore()));
 
     MessageCli.PRINT_PLAYER_POINTS.printMessage(
-        this.AiPlayer.getName(), Integer.valueOf(this.AiPlayer.getScore()));
+        this.aiPlayer.getName(), Integer.valueOf(this.aiPlayer.getScore()));
   }
 }
