@@ -7,6 +7,7 @@ import nz.ac.auckland.se281.strategies.RandomStrategy;
 
 public class Factory {
 
+  // Method to create an Ai Player to set strategy based on difficulty chosen
   public static AiPlayer constructAi(Difficulty difficulty) {
     AiPlayer ai = new AiPlayer();
 

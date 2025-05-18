@@ -11,8 +11,10 @@ public class HumanPlayer extends Players {
     super(name);
   }
 
+  // Method to get the choice and guess of the human player
   @Override
   public void getChoices(Game thisRound) {
+    // Continually reprompt until inputs are valid.
     boolean reprompt = true;
     while (reprompt) {
       MessageCli.ASK_HUMAN_INPUT.printMessage();
@@ -32,6 +34,8 @@ public class HumanPlayer extends Players {
         MessageCli.INVALID_HUMAN_INPUT.printMessage();
         continue;
       }
+
+      // Set reprompt to false and set the choices
       this.chosenColour = chosenColour;
       this.guessedColour = guessedColour;
       reprompt = false;

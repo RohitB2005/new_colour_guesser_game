@@ -38,6 +38,8 @@ public class Game {
     this.pointsScored = false;
   }
 
+  // newGame uses the factory AI consstructor to create the AI with the chosen difficulty. Also
+  // initialise all fields to their expected starting values
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
     this.humanPlayer = new HumanPlayer(options[0]);
     this.aiPlayer = Factory.constructAi(difficulty);
@@ -62,13 +64,17 @@ public class Game {
       return;
     }
 
+    // Keeps track of round number
     MessageCli.START_ROUND.printMessage(
         String.valueOf(this.thisRound), String.valueOf(this.totalRounds));
 
+    // Simply sets the human's last choice, and gets the MEDIUM strategy.
     if (this.thisDifficulty == Difficulty.MEDIUM) {
       this.aiPlayer.getStrategy().setHumanPreviousChoice(this.humanPreviousChoice);
     }
 
+    // Added many checks for hard difficulty, determining which strategy to use based on the
+    // conditions of the game.
     if (this.thisDifficulty == Difficulty.HARD) {
       if (this.thisRound == 1 || this.thisRound == 2) {
         aiPlayer.setStrategy(new RandomStrategy());
@@ -88,6 +94,7 @@ public class Game {
         }
       }
 
+      // Sets the move history of the player
       Strategies currentStrategy = this.aiPlayer.getStrategy();
       currentStrategy.setColourHistory(this.history);
 
@@ -96,6 +103,7 @@ public class Game {
       }
     }
 
+    // Get choices and guesses for both players and print this information.
     this.humanPlayer.getChoices(this);
     this.aiPlayer.getChoices(this);
 
@@ -111,6 +119,7 @@ public class Game {
 
     MessageCli.PRINT_INFO_MOVE.printMessage(this.aiPlayer.getName(), aiChoice, aiGuess);
 
+    // Power colour mechanic, used in round multiples of 3.
     if (this.thisRound % 3 == 0) {
       this.powerColour = Colour.getRandomColourForPowerColour();
       MessageCli.PRINT_POWER_COLOUR.printMessage(this.powerColour);
@@ -118,6 +127,7 @@ public class Game {
       this.powerColour = null;
     }
 
+    // Handling point scoring, adding differing number of points for different cases
     int humanScore = 0;
     int aiScore = 0;
     this.pointsScored = false;
@@ -140,6 +150,7 @@ public class Game {
     this.humanPlayer.addPoints(humanScore);
     this.aiPlayer.addPoints(aiScore);
 
+    // Print the outcomes and increment/set required values needed for the next cycle.
     MessageCli.PRINT_OUTCOME_ROUND.printMessage(
         this.humanPlayer.getName(), String.valueOf(humanScore));
 
@@ -153,6 +164,8 @@ public class Game {
     }
   }
 
+  // This helper method prints the total player points of each player then determines which player
+  // won the game, printing this
   private void printEndingStats() {
     MessageCli.PRINT_END_GAME.printMessage();
 
@@ -171,6 +184,8 @@ public class Game {
     }
   }
 
+  // Showstats simply shows the points of each player when called. Cannot be called if a game is not
+  // in progress.
   public void showStats() {
     if (!gameInProgress) {
       MessageCli.GAME_NOT_STARTED.printMessage();
