@@ -63,8 +63,4 @@ public class LeastUsedStrategy implements Strategies {
       return Colour.YELLOW;
     }
   }
-
-  public void updateHistory(Colour humanChoice) {
-    history.add(humanChoice);
-  }
 }

@@ -36,9 +36,4 @@ public abstract class Players {
   }
 
   public abstract void getChoices(Game thisRound);
-
-  public void resetChoices() {
-    this.chosenColour = null;
-    this.guessedColour = null;
-  }
 }

@@ -98,9 +98,7 @@ public class Game {
       Strategies currentStrategy = this.aiPlayer.getStrategy();
       currentStrategy.setColourHistory(this.history);
 
-      if (currentStrategy instanceof AvoidLastStrategy) {
-        currentStrategy.setHumanPreviousChoice(this.humanPreviousChoice);
-      }
+      currentStrategy.setHumanPreviousChoice(this.humanPreviousChoice);
     }
 
     // Get choices and guesses for both players and print this information.
