@@ -9,8 +9,10 @@ public class Factory {
 
   // Method to create an Ai Player to set strategy based on difficulty chosen
   public static AiPlayer constructAi(Difficulty difficulty) {
+    // Initialise new Ai Player
     AiPlayer ai = new AiPlayer();
 
+    // Switch statement sets AI strategy with different difficulties.
     switch (difficulty) {
       case EASY:
         ai.setStrategy(new RandomStrategy());

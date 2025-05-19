@@ -1081,6 +1081,35 @@ public class MainTest {
     }
 
     @Test
-    public void yourtest() throws Exception {}
+    public void YT_08_test_very_long_player_name() throws Exception {
+      String longName = "Player".repeat(20); // 100 characters
+      runCommands(NEW_GAME + " EASY 3", longName, PLAY, "B Y");
+      assertContains(WELCOME_PLAYER.getMessage(longName));
+    }
+
+    @Test
+    public void YT_09_test_multiple_invalid_inputs() throws Exception {
+      runCommands(NEW_GAME + " EASY 3", "Valerio", PLAY, "INVALID1", "INVALID2", "INVALID3", "B Y");
+      assertContainsAtRound(INVALID_HUMAN_INPUT.getMessage(), 1);
+      assertContainsAtRound(PRINT_INFO_MOVE.getMessage("Valerio", "BLUE", "YELLOW"), 1);
+    }
+
+    @Test
+    public void YT_10_test_game_mode_case_sensitivity() throws Exception {
+      runCommands(
+          NEW_GAME + " easy 3",
+          "Valerio",
+          PLAY,
+          "B Y",
+          NEW_GAME + " MEDIUM 3",
+          "Valerio",
+          PLAY,
+          "R G",
+          NEW_GAME + " hard 3",
+          "Valerio",
+          PLAY,
+          "Y B");
+      assertDoesNotContain(GAME_NOT_STARTED.getMessage());
+    }
   }
 }

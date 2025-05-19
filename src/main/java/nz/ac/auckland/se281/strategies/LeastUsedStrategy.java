@@ -30,6 +30,7 @@ public class LeastUsedStrategy implements Strategies {
     int countGreen = 0;
     int countYellow = 0;
 
+    // Increment the count for the specific colour based on number of times it's been played
     for (Colour choice : this.history) {
       switch (choice) {
         case RED:
@@ -53,6 +54,7 @@ public class LeastUsedStrategy implements Strategies {
     leastUsed = Math.min(leastUsed, countGreen);
     leastUsed = Math.min(leastUsed, countYellow);
 
+    // Return the least played colour
     if (leastUsed == countRed) {
       return Colour.RED;
     } else if (leastUsed == countGreen) {

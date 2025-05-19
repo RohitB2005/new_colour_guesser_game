@@ -38,14 +38,15 @@ public class Game {
     this.pointsScored = false;
   }
 
-  // newGame uses the factory AI consstructor to create the AI with the chosen difficulty. Also
-  // initialise all fields to their expected starting values
+  // newGame uses the factory AI consstructor to create the AI with the chosen difficulty.
   public void newGame(Difficulty difficulty, int numRounds, String[] options) {
+    // Construct instances of the AI and human player, welcoming the player
     this.humanPlayer = new HumanPlayer(options[0]);
     this.aiPlayer = Factory.constructAi(difficulty);
 
     MessageCli.WELCOME_PLAYER.printMessage(this.humanPlayer.getName());
 
+    // Initialise all fields needed for AI and human at the start of a game
     this.totalRounds = numRounds;
     this.thisRound = 1;
     this.gameInProgress = true;
@@ -165,6 +166,7 @@ public class Game {
   // This helper method prints the total player points of each player then determines which player
   // won the game, printing this
   private void printEndingStats() {
+    // Print end game message and points of each player
     MessageCli.PRINT_END_GAME.printMessage();
 
     MessageCli.PRINT_PLAYER_POINTS.printMessage(
@@ -173,6 +175,7 @@ public class Game {
     MessageCli.PRINT_PLAYER_POINTS.printMessage(
         this.aiPlayer.getName(), Integer.valueOf(this.aiPlayer.getScore()));
 
+    // Handles logic for determining which player won, or a tie
     if (this.humanPlayer.getScore() == this.aiPlayer.getScore()) {
       MessageCli.PRINT_TIE_GAME.printMessage();
     } else if (this.humanPlayer.getScore() < this.aiPlayer.getScore()) {
@@ -182,14 +185,15 @@ public class Game {
     }
   }
 
-  // Showstats simply shows the points of each player when called. Cannot be called if a game is not
-  // in progress.
+  // Showstats simply shows the points of each player when called.
   public void showStats() {
+    // Check to deny command use with no active game.
     if (!gameInProgress) {
       MessageCli.GAME_NOT_STARTED.printMessage();
       return;
     }
 
+    // Print points of each player using MessageCli
     MessageCli.PRINT_PLAYER_POINTS.printMessage(
         this.humanPlayer.getName(), Integer.valueOf(this.humanPlayer.getScore()));
 
