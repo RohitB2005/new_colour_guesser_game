@@ -18,7 +18,8 @@ import org.junit.runners.Suite.SuiteClasses;
   MainTest.Task2.class,
   MainTest.Task3.class,
   MainTest.Task4.class,
-  MainTest.Task5.class
+  MainTest.Task5.class,
+  MainTest.YourTests.class
 })
 public class MainTest {
 
@@ -1081,21 +1082,21 @@ public class MainTest {
     }
 
     @Test
-    public void YT_08_test_very_long_player_name() throws Exception {
+    public void YT_01_test_very_long_player_name() throws Exception {
       String longName = "Player".repeat(20); // 100 characters
       runCommands(NEW_GAME + " EASY 3", longName, PLAY, "B Y");
       assertContains(WELCOME_PLAYER.getMessage(longName));
     }
 
     @Test
-    public void YT_09_test_multiple_invalid_inputs() throws Exception {
+    public void YT_02_test_multiple_invalid_inputs() throws Exception {
       runCommands(NEW_GAME + " EASY 3", "Valerio", PLAY, "INVALID1", "INVALID2", "INVALID3", "B Y");
       assertContainsAtRound(INVALID_HUMAN_INPUT.getMessage(), 1);
       assertContainsAtRound(PRINT_INFO_MOVE.getMessage("Valerio", "BLUE", "YELLOW"), 1);
     }
 
     @Test
-    public void YT_10_test_game_mode_case_sensitivity() throws Exception {
+    public void YT_03_test_game_mode_case_sensitivity() throws Exception {
       runCommands(
           NEW_GAME + " easy 3",
           "Valerio",
@@ -1110,6 +1111,56 @@ public class MainTest {
           PLAY,
           "Y B");
       assertDoesNotContain(GAME_NOT_STARTED.getMessage());
+    }
+
+    @Test
+    public void YT_04_new_game_resets_everything() throws Exception {
+      Utils.randomAi = new Random(1);
+      runCommands(
+          NEW_GAME + " MEDIUM 3",
+          "Valerio",
+          PLAY,
+          "R G",
+          PLAY,
+          "B Y",
+          NEW_GAME + " MEDIUM 2",
+          "Valerio",
+          PLAY,
+          "R G");
+      assertContains(START_ROUND.getMessage("1", "3"));
+      assertContainsAtRound(PRINT_INFO_MOVE.getMessage("Valerio", "RED", "GREEN"), 1);
+    }
+
+    @Test
+    public void YT_05_show_stats_before_game() throws Exception {
+      runCommands(SHOW_STATS);
+      assertContains(GAME_NOT_STARTED.getMessage());
+    }
+
+    @Test
+    public void YT_06_least_used_strategy_with_repeat_colour() throws Exception {
+      Utils.randomAi = new Random(123);
+      runCommands(
+          NEW_GAME + " HARD 4",
+          "Valerio",
+          PLAY, // Round 1 - random
+          "R R",
+          PLAY, // Round 2 - random
+          "R R",
+          PLAY, // Round 3 - switches to LeastUsed
+          "G G");
+      // RED used twice, GREEN once -> AI should least likely pick GREEN
+      assertContainsAtRound(PRINT_INFO_MOVE.getMessage(AI_NAME, "GREEN", "GREEN"), 3);
+    }
+
+    @Test
+    public void YT_07_power_colour_bonus_points() throws Exception {
+      Utils.randomPowerNumber = new Random(1); // BLUE selected
+      runCommands(
+          NEW_GAME + " EASY 3", "Valerio", PLAY, "R G", PLAY, "G Y", PLAY, "B B" // Round 3
+          );
+      assertContainsAtRound(PRINT_POWER_COLOUR.getMessage("BLUE"), 3);
+      assertContainsAtRound(PRINT_OUTCOME_ROUND.getMessage("Valerio", 3), 3);
     }
   }
 }
