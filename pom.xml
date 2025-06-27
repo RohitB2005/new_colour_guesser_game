@@ -27,8 +27,24 @@
       <scope>system</scope>
       <systemPath>${pom.basedir}/libs/codestyle.jar</systemPath>
     </dependency>
+  <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>21.0.2</version> <!-- It's good practice to use the latest patch version -->
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <version>21.0.2</version>
+    </dependency>
   </dependencies>
   <build>
+   <resources>
+        <!-- This block explicitly tells Maven where to find resource files -->
+        <resource>
+            <directory>src/main/resources</directory>
+        </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -78,6 +94,17 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-maven-plugin</artifactId>
+          <version>0.0.8</version>
+          <configuration>
+              <!-- This is the only configuration needed -->
+              <mainClass>nz.ac.auckland.se281.gui.GuiApplication</mainClass>
+          </configuration>
+      </plugin>
+
+
     </plugins>
   </build>
 </project>
