@@ -14,14 +14,15 @@ public class Main {
   public enum Difficulty {
     EASY,
     MEDIUM,
-    HARD;
+    HARD,
+    NIGHTMARE
   }
 
   public enum Command {
     NEW_GAME(
         2,
         "Start a new game: NEW_GAME <DIFFICULTY_LEVEL> <NUMBER_OF_ROUNDS>\n"
-            + "\tDIFFICULTY_LEVEL: EASY | MEDIUM | HARD\n"
+            + "\tDIFFICULTY_LEVEL: EASY | MEDIUM | HARD | NIGHTMARE\n"
             + "\tNUMBER_OF_ROUNDS: a positive integer (> 0)",
         "What is your name?"),
     PLAY(0, "Play a round"),
@@ -181,8 +182,6 @@ public class Main {
     } while (processCommand(command));
   }
 
-  
-
   private boolean processCommand(String input) {
     // Remove whitespace at the beginning and end of the input.
     input = input.trim();
@@ -268,7 +267,7 @@ public class Main {
     }
     return options;
   }
- 
+
   private boolean checkArgs(final Command command, final String[] args) {
     return command.getNumArgs() == args.length - 1;
   }

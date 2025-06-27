@@ -11,6 +11,10 @@ public class LeastUsedStrategy implements Strategies {
     this.history = new ArrayList<>();
   }
 
+  public LeastUsedStrategy(ArrayList<Colour> history) {
+    this.history = history;
+  }
+
   @Override
   public void setColourHistory(ArrayList<Colour> history) {
     this.history = history;

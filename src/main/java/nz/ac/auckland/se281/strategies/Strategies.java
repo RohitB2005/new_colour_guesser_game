@@ -9,6 +9,8 @@ public interface Strategies {
 
   default void setColourHistory(ArrayList<Colour> history) {}
 
+  default void setHumanGuessHistory(ArrayList<Colour> guessHistory) {}
+
   Colour chosenColour();
 
   Colour guessedColour();

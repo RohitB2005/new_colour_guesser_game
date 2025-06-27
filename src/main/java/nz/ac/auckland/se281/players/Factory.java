@@ -3,6 +3,7 @@ package nz.ac.auckland.se281.players;
 import nz.ac.auckland.se281.Main.Difficulty;
 import nz.ac.auckland.se281.strategies.AvoidLastStrategy;
 import nz.ac.auckland.se281.strategies.LeastUsedStrategy;
+import nz.ac.auckland.se281.strategies.NightmareStrategy;
 import nz.ac.auckland.se281.strategies.RandomStrategy;
 
 public class Factory {
@@ -23,6 +24,9 @@ public class Factory {
         break;
       case HARD:
         ai.setStrategy(new LeastUsedStrategy());
+        break;
+      case NIGHTMARE:
+        ai.setStrategy(new NightmareStrategy());
         break;
       default:
         break;

@@ -27,6 +27,7 @@ public class Game {
   private Difficulty thisDifficulty;
   private Colour humanPreviousChoice;
   private ArrayList<Colour> history;
+  private ArrayList<Colour> guessHistory;
   private String usedStrategy;
   private boolean pointsScored;
 
@@ -35,6 +36,7 @@ public class Game {
     this.gameInProgress = false;
     this.humanPreviousChoice = null;
     this.history = new ArrayList<>();
+    this.guessHistory = new ArrayList<>();
     this.pointsScored = false;
   }
 
@@ -54,6 +56,7 @@ public class Game {
     this.thisDifficulty = difficulty;
     this.humanPreviousChoice = null;
     this.history.clear();
+    this.guessHistory.clear();
     this.pointsScored = false;
     this.usedStrategy = "Random";
   }
@@ -98,8 +101,13 @@ public class Game {
       // Sets the move history of the player
       Strategies currentStrategy = this.aiPlayer.getStrategy();
       currentStrategy.setColourHistory(this.history);
+      currentStrategy.setHumanGuessHistory(this.guessHistory);
 
       currentStrategy.setHumanPreviousChoice(this.humanPreviousChoice);
+    }
+
+    if (this.thisDifficulty == Difficulty.NIGHTMARE) {
+      this.aiPlayer.getStrategy().setHumanGuessHistory(this.guessHistory);
     }
 
     // Get choices and guesses for both players and print this information.
@@ -110,6 +118,7 @@ public class Game {
     Colour humanGuess = this.humanPlayer.guessedColour();
 
     this.history.add(humanChoice);
+    this.guessHistory.add(humanGuess);
 
     Colour aiChoice = this.aiPlayer.chosenColour();
     Colour aiGuess = this.aiPlayer.guessedColour();
