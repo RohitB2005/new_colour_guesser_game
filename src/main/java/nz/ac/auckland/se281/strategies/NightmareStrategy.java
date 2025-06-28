@@ -61,7 +61,7 @@ public class NightmareStrategy implements Strategies {
   }
 
   private void updateMap() {
-    if (history.size() < 2) {
+    if (this.history.size() < 2) {
       return;
     }
 

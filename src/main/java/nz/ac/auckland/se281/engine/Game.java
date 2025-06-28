@@ -107,7 +107,9 @@ public class Game {
     }
 
     if (this.thisDifficulty == Difficulty.NIGHTMARE) {
-      this.aiPlayer.getStrategy().setHumanGuessHistory(this.guessHistory);
+      Strategies currentStrategy = this.aiPlayer.getStrategy();
+      currentStrategy.setHumanGuessHistory(this.guessHistory);
+      currentStrategy.setColourHistory(this.history);
     }
 
     // Get choices and guesses for both players and print this information.
