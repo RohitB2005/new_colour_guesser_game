@@ -218,10 +218,6 @@ public class Game {
       return null;
     }
 
-    this.history.add(humanChoice);
-    this.guessHistory.add(humanGuess);
-    this.humanPreviousChoice = humanChoice;
-
     // Simply sets the human's last choice, and gets the MEDIUM strategy.
     if (this.thisDifficulty == Difficulty.MEDIUM) {
       this.aiPlayer.getStrategy().setHumanPreviousChoice(this.humanPreviousChoice);
@@ -264,6 +260,9 @@ public class Game {
 
     Colour aiChoice = this.aiPlayer.getStrategy().chosenColour();
     Colour aiGuess = this.aiPlayer.getStrategy().guessedColour();
+
+    this.history.add(humanChoice);
+    this.guessHistory.add(humanGuess);
 
     // Power colour mechanic, used in round multiples of 3.
     if (this.thisRound % 3 == 0) {

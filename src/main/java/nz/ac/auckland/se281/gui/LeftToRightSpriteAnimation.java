@@ -6,7 +6,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
-public class SpriteAnimation extends Transition {
+public class LeftToRightSpriteAnimation extends Transition {
 
   private final ImageView imageView;
   private final int count;
@@ -16,7 +16,7 @@ public class SpriteAnimation extends Transition {
   private final int width;
   private final int height;
 
-  public SpriteAnimation(
+  public LeftToRightSpriteAnimation(
       ImageView imageView,
       Duration duration,
       int count,
@@ -38,19 +38,12 @@ public class SpriteAnimation extends Transition {
 
   @Override
   protected void interpolate(double k) {
-    // This method is called on every frame of the animation
-
     final int index = Math.min((int) Math.floor(k * count), count - 1);
 
-    // --- THIS IS THE FIX ---
-    // We calculate the x-coordinate from the right edge of the animation strip.
-    // It starts at the last column and moves leftward as 'index' increases.
-    final int x = ((columns - 1) - (index % columns)) * width + offsetX;
-
-    // The y-coordinate calculation remains the same
+    // This is the standard Left-to-Right formula
+    final int x = (index % columns) * width + offsetX;
     final int y = (index / columns) * height + offsetY;
 
-    // Set the "window" of the ImageView to show only the current frame
     imageView.setViewport(new Rectangle2D(x, y, width, height));
   }
 }

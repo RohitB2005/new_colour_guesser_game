@@ -33,7 +33,7 @@ public class GuiController {
   @FXML private Button submitButton, playAgainButton, exitButton, nextRoundButton;
   @FXML private TextArea gameLogArea;
   @FXML private RadioButton easyRadio, mediumRadio, hardRadio, nightmareRadio;
-  @FXML private TextField roundsTextField;
+  @FXML private TextField roundsTextField, playerNameTextField;
   @FXML private ImageView playerImageView, aiImageView;
 
   // Game state and helper fields
@@ -44,10 +44,15 @@ public class GuiController {
   private final List<String> selectionStyles =
       Arrays.asList("red-selected", "green-selected", "blue-selected", "yellow-selected");
 
-  // Animation fields
+  // Animation fields for BOTH characters
+  private Image playerIdleSheet, playerWinRoundSheet, playerLoseRoundSheet, playerLoseGameSheet;
   private Image aiIdleSheet, aiWinRoundSheet, aiLoseRoundSheet, aiLoseGameSheet;
+  private Animation playerIdleAnimation,
+      playerWinRoundAnimation,
+      playerLoseRoundAnimation,
+      playerLoseGameAnimation;
   private Animation aiIdleAnimation, aiWinRoundAnimation, aiLoseRoundAnimation, aiLoseGameAnimation;
-  private Rectangle2D defaultAiViewport;
+  private Rectangle2D defaultPlayerViewport, defaultAiViewport;
 
   @FXML
   public void initialize() {
@@ -64,17 +69,46 @@ public class GuiController {
 
   private void loadAssetsAndCreateAnimations() {
     try {
+      final int FRAME_WIDTH = 128;
+      final int FRAME_HEIGHT = 128;
+
+      // Load Player Assets
+      playerIdleSheet = new Image(getClass().getResourceAsStream("/images/PlayerIdle.png"));
+      playerWinRoundSheet = new Image(getClass().getResourceAsStream("/images/Attack_1.png"));
+      playerLoseRoundSheet = new Image(getClass().getResourceAsStream("/images/PlayerHurt.png"));
+      playerLoseGameSheet = new Image(getClass().getResourceAsStream("/images/PlayerDead.png"));
+      playerImageView.setImage(playerIdleSheet);
+      defaultPlayerViewport = new Rectangle2D(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+      playerImageView.setViewport(defaultPlayerViewport);
+
+      // --- THIS IS THE FIX: Set win/loss round animations to loop indefinitely ---
+      playerIdleAnimation =
+          new LeftToRightSpriteAnimation(
+              playerImageView, Duration.millis(800), 5, 5, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+      playerIdleAnimation.setCycleCount(Animation.INDEFINITE);
+      playerWinRoundAnimation =
+          new LeftToRightSpriteAnimation(
+              playerImageView, Duration.millis(500), 4, 4, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+      playerWinRoundAnimation.setCycleCount(Animation.INDEFINITE); // LOOPING
+      playerLoseRoundAnimation =
+          new LeftToRightSpriteAnimation(
+              playerImageView, Duration.millis(400), 3, 3, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+      playerLoseRoundAnimation.setCycleCount(Animation.INDEFINITE); // LOOPING
+      playerLoseGameAnimation =
+          new LeftToRightSpriteAnimation(
+              playerImageView, Duration.millis(600), 4, 4, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
+      playerLoseGameAnimation.setCycleCount(1); // Game over animation plays only once
+
+      // Load AI Assets
       aiIdleSheet = new Image(getClass().getResourceAsStream("/images/Idle.png"));
       aiWinRoundSheet = new Image(getClass().getResourceAsStream("/images/Shot_2.png"));
       aiLoseRoundSheet = new Image(getClass().getResourceAsStream("/images/Hurt.png"));
       aiLoseGameSheet = new Image(getClass().getResourceAsStream("/images/Dead.png"));
-
-      final int FRAME_WIDTH = 128;
-      final int FRAME_HEIGHT = 128;
-
+      aiImageView.setImage(aiIdleSheet);
       defaultAiViewport = new Rectangle2D(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
       aiImageView.setViewport(defaultAiViewport);
 
+      // Create AI Animations
       aiIdleAnimation =
           new SpriteAnimation(
               aiImageView, Duration.millis(1000), 5, 5, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
@@ -82,17 +116,20 @@ public class GuiController {
       aiWinRoundAnimation =
           new SpriteAnimation(
               aiImageView, Duration.millis(800), 8, 8, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-      aiWinRoundAnimation.setCycleCount(Animation.INDEFINITE);
+      aiWinRoundAnimation.setCycleCount(Animation.INDEFINITE); // LOOPING
       aiLoseRoundAnimation =
           new SpriteAnimation(
               aiImageView, Duration.millis(500), 3, 3, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-      aiLoseRoundAnimation.setCycleCount(Animation.INDEFINITE);
+      aiLoseRoundAnimation.setCycleCount(Animation.INDEFINITE); // LOOPING
       aiLoseGameAnimation =
           new SpriteAnimation(
               aiImageView, Duration.millis(1200), 7, 7, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-      aiLoseGameAnimation.setCycleCount(Animation.INDEFINITE);
+      aiLoseGameAnimation.setCycleCount(1); // Game over animation plays only once
+
     } catch (Exception e) {
-      gameLogArea.appendText("SYSTEM: Could not load AI character images or create animations.\n");
+      gameLogArea.appendText(
+          "SYSTEM: Could not load character images. Check file names in"
+              + " 'src/main/resources/images/'.\n");
       e.printStackTrace();
     }
   }
@@ -140,41 +177,51 @@ public class GuiController {
   }
 
   private void playRoundEndAnimations(RoundResult result) {
+    playerIdleAnimation.stop();
     aiIdleAnimation.stop();
-    Animation roundAnimation = null;
 
-    if (result.getAiPoints() > result.getHumanPoints()) {
-      aiImageView.setImage(aiWinRoundSheet);
-      roundAnimation = aiWinRoundAnimation;
-    } else if (result.getHumanPoints() > result.getAiPoints()) {
+    if (result.getHumanPoints() > result.getAiPoints()) {
+      playerImageView.setImage(playerWinRoundSheet);
       aiImageView.setImage(aiLoseRoundSheet);
-      roundAnimation = aiLoseRoundAnimation;
+      playerWinRoundAnimation.play();
+      aiLoseRoundAnimation.play();
+    } else if (result.getAiPoints() > result.getHumanPoints()) {
+      playerImageView.setImage(playerLoseRoundSheet);
+      aiImageView.setImage(aiWinRoundSheet);
+      playerLoseRoundAnimation.play();
+      aiWinRoundAnimation.play();
     }
 
-    if (roundAnimation != null) {
-      // If there's an animation to play (win/loss)...
-      roundAnimation.setOnFinished(e -> transitionToNextState());
-      roundAnimation.play();
-    } else {
-      // If it was a tie, there's no animation, so transition immediately.
-      transitionToNextState();
-    }
+    // No matter the result (win, loss, or tie), transition to the "Next Round" button
+    transitionToNextState();
   }
 
   private void transitionToNextState() {
-    // Show the next round button and wait for the user.
     submitButton.setVisible(false);
     nextRoundButton.setVisible(true);
   }
 
   @FXML
   public void handleNextRound(ActionEvent event) {
-    // Restore idle animation
-    aiImageView.setImage(aiIdleSheet);
-    aiImageView.setViewport(defaultAiViewport);
-    aiIdleAnimation.play();
+    // --- THIS IS THE FIX ---
+    // Stop all possible looping animations before proceeding.
+    playerWinRoundAnimation.stop();
+    playerLoseRoundAnimation.stop();
+    aiWinRoundAnimation.stop();
+    aiLoseRoundAnimation.stop();
 
-    // Check if the game is over
+    // Restore both characters to their idle state.
+    if (playerIdleAnimation != null) {
+      playerImageView.setImage(playerIdleSheet);
+      playerImageView.setViewport(defaultPlayerViewport);
+      playerIdleAnimation.play();
+    }
+    if (aiIdleAnimation != null) {
+      aiImageView.setImage(aiIdleSheet);
+      aiImageView.setViewport(defaultAiViewport);
+      aiIdleAnimation.play();
+    }
+
     if (game.isGameOver()) {
       endGame();
     } else {
@@ -190,16 +237,22 @@ public class GuiController {
     gameLogArea.appendText("==================\n  GAME OVER\n==================\n");
     if (pScore > aScore) {
       gameLogArea.appendText("Congratulations, you win!\n");
-    } else if (aScore > pScore) {
-      gameLogArea.appendText("HAL-9000 wins!\n");
+      playerIdleAnimation.stop();
       if (aiLoseGameAnimation != null) {
         aiIdleAnimation.stop();
         aiImageView.setImage(aiLoseGameSheet);
         aiLoseGameAnimation.play();
       }
+    } else if (aScore > pScore) {
+      gameLogArea.appendText("HAL-9000 wins!\n");
+      aiIdleAnimation.stop();
+      if (playerLoseGameAnimation != null) {
+        playerIdleAnimation.stop();
+        playerImageView.setImage(playerLoseGameSheet);
+        playerLoseGameAnimation.play();
+      }
     } else {
       gameLogArea.appendText("It's a tie!\n");
-      // On a game tie, the AI just stays idle.
     }
 
     setGameControlsDisabled(true);
@@ -225,9 +278,14 @@ public class GuiController {
       roundsTextField.setText("10");
     }
 
-    game.newGame(difficulty, numRounds, new String[] {"Rohit"});
+    String playerName = playerNameTextField.getText();
+    if (playerName == null || playerName.trim().isEmpty()) {
+      playerName = "Player";
+    }
 
-    resetToInitialState(); // Reset UI first
+    game.newGame(difficulty, numRounds, new String[] {playerName});
+
+    resetToInitialState();
     setGameControlsDisabled(false);
     setSetupControlsDisabled(true);
     exitButton.setDisable(false);
@@ -239,7 +297,9 @@ public class GuiController {
             + difficulty
             + ". Rounds: "
             + numRounds
-            + ". Good luck.\n");
+            + ". Good luck, "
+            + playerName
+            + "!\n");
     playerNameLabel.setText(game.getPlayerName());
 
     resetForNextRound();
@@ -259,8 +319,18 @@ public class GuiController {
     playerIndicatorBox.getChildren().clear();
     aiIndicatorBox.getChildren().clear();
 
+    if (playerIdleAnimation != null) {
+      playerWinRoundAnimation.stop();
+      playerLoseRoundAnimation.stop();
+      playerLoseGameAnimation.stop();
+      playerImageView.setImage(playerIdleSheet);
+      playerImageView.setViewport(defaultPlayerViewport);
+      playerIdleAnimation.play();
+    }
     if (aiIdleAnimation != null) {
-      aiIdleAnimation.stop();
+      aiWinRoundAnimation.stop();
+      aiLoseRoundAnimation.stop();
+      aiLoseGameAnimation.stop();
       aiImageView.setImage(aiIdleSheet);
       aiImageView.setViewport(defaultAiViewport);
       aiIdleAnimation.play();
@@ -347,5 +417,6 @@ public class GuiController {
     hardRadio.setDisable(isDisabled);
     nightmareRadio.setDisable(isDisabled);
     roundsTextField.setDisable(isDisabled);
+    playerNameTextField.setDisable(isDisabled);
   }
 }

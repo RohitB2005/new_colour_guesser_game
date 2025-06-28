@@ -6,15 +6,16 @@
 
 /* Base style for all buttons in the game */
 .button {
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #505050;
   -fx-background-color: #e9e9e9;
   -fx-border-color: #c0c0c0;
   -fx-border-radius: 8;
   -fx-background-radius: 8;
-  -fx-font-size: 14px;
-  -fx-font-weight: bold;
-  -fx-text-fill: #505050;
 }
 
+/* --- HOVER EFFECTS --- */
 #choiceRedButton:hover,
 #guessRedButton:hover {
   -fx-background-color: #ffcdd2;
@@ -35,28 +36,51 @@
   -fx-background-color: #fff9c4;
 }
 
-/* --- SELECTION STYLES: Change background AND text color for contrast --- */
+/* --- SELECTION STYLES --- */
 .red-selected {
   -fx-background-color: #d32f2f;
-  /* Strong Red */
   -fx-text-fill: white;
 }
 
 .green-selected {
   -fx-background-color: #388e3c;
-  /* Strong Green */
   -fx-text-fill: white;
 }
 
 .blue-selected {
   -fx-background-color: #1976d2;
-  /* Strong Blue */
   -fx-text-fill: white;
 }
 
 .yellow-selected {
   -fx-background-color: #fbc02d;
-  /* Strong Yellow */
   -fx-text-fill: #333;
-  /* Black text for yellow background */
+}
+
+
+/* --- RGB ANIMATED TITLE (CORRECTED) --- */
+#titleLabel {
+  /* Define the text fill using a linear gradient */
+  -fx-text-fill: linear-gradient(to right,
+      #ff0000,
+      #ffff00,
+      #00ff00,
+      #00ffff,
+      #0000ff,
+      #ff00ff,
+      #ff0000);
+
+  /* Animate the fill of the text itself. This is more direct. */
+  -fx-animation: rgb-text-animation 5s infinite linear;
+}
+
+/* We still need keyframes, but they will now target a different property */
+@keyframes rgb-text-animation {
+  0% {
+    -fx-text-fill: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+  }
+
+  100% {
+    -fx-text-fill: linear-gradient(to right, #ff00ff, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff);
+  }
 }
