@@ -1,0 +1,74 @@
+/* A modern, clean base style for the whole window */
+.root {
+  -fx-font-family: "Arial";
+  -fx-background-color: #f4f4f4;
+}
+
+/* Base style for all buttons in the game */
+.button {
+  -fx-background-color: #e9e9e9;
+  -fx-border-color: #c0c0c0;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #505050;
+}
+
+/* --- HOVER EFFECTS --- */
+/* When the mouse is over a button, give it a subtle color glow */
+
+#choiceRedButton:hover,
+#guessRedButton:hover {
+  -fx-background-color: #ffdddd;
+  /* Light red */
+  -fx-border-color: #e57373;
+}
+
+#choiceGreenButton:hover,
+#guessGreenButton:hover {
+  -fx-background-color: #ddffdd;
+  /* Light green */
+  -fx-border-color: #81c784;
+}
+
+#choiceBlueButton:hover,
+#guessBlueButton:hover {
+  -fx-background-color: #ddddff;
+  /* Light blue */
+  -fx-border-color: #64b5f6;
+}
+
+#choiceYellowButton:hover,
+#guessYellowButton:hover {
+  -fx-background-color: #ffffdd;
+  /* Light yellow */
+  -fx-border-color: #fff176;
+}
+
+/* --- SELECTION STYLES --- */
+/* When a button is clicked, give it a strong, colored border */
+
+.red-selected {
+  -fx-border-color: #c62828;
+  /* Strong red */
+  -fx-border-width: 3;
+}
+
+.green-selected {
+  -fx-border-color: #2e7d32;
+  /* Strong green */
+  -fx-border-width: 3;
+}
+
+.blue-selected {
+  -fx-border-color: #1565c0;
+  /* Strong blue */
+  -fx-border-width: 3;
+}
+
+.yellow-selected {
+  -fx-border-color: #f9a825;
+  /* Strong yellow */
+  -fx-border-width: 3;
+}

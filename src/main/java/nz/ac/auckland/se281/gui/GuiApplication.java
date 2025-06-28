@@ -17,6 +17,8 @@ public class GuiApplication extends Application {
     // Set up the scene
     Scene scene = new Scene(root, 800, 600); // Window size 800x600
 
+    scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+
     // Set up the main window (called a "Stage" in JavaFX)
     primaryStage.setTitle("Mind Game - Colour Guesser");
     primaryStage.setScene(scene);

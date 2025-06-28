@@ -211,4 +211,124 @@ public class Game {
     MessageCli.PRINT_PLAYER_POINTS.printMessage(
         this.aiPlayer.getName(), Integer.valueOf(this.aiPlayer.getScore()));
   }
+
+  public RoundResult playRound(Colour humanChoice, Colour humanGuess) {
+
+    if (!gameInProgress) {
+      return null;
+    }
+
+    this.history.add(humanChoice);
+    this.guessHistory.add(humanGuess);
+    this.humanPreviousChoice = humanChoice;
+
+    // Simply sets the human's last choice, and gets the MEDIUM strategy.
+    if (this.thisDifficulty == Difficulty.MEDIUM) {
+      this.aiPlayer.getStrategy().setHumanPreviousChoice(this.humanPreviousChoice);
+    }
+
+    // Added many checks for hard difficulty, determining which strategy to use based on the
+    // conditions of the game.
+    if (this.thisDifficulty == Difficulty.HARD) {
+      if (this.thisRound == 1 || this.thisRound == 2) {
+        aiPlayer.setStrategy(new RandomStrategy());
+        usedStrategy = "Random";
+      } else if (this.thisRound == 3) {
+        aiPlayer.setStrategy(new LeastUsedStrategy());
+        usedStrategy = "LeastUsed";
+      } else {
+        if (this.pointsScored == false) {
+          if (usedStrategy.equals("LeastUsed")) {
+            aiPlayer.setStrategy(new AvoidLastStrategy());
+            usedStrategy = "AvoidLast";
+          } else if (usedStrategy.equals("AvoidLast")) {
+            aiPlayer.setStrategy(new LeastUsedStrategy());
+            usedStrategy = "LeastUsed";
+          }
+        }
+      }
+
+      // Sets the move history of the player
+      Strategies currentStrategy = this.aiPlayer.getStrategy();
+      currentStrategy.setColourHistory(this.history);
+      currentStrategy.setHumanGuessHistory(this.guessHistory);
+
+      currentStrategy.setHumanPreviousChoice(this.humanPreviousChoice);
+    }
+
+    if (this.thisDifficulty == Difficulty.NIGHTMARE) {
+      Strategies currentStrategy = this.aiPlayer.getStrategy();
+      currentStrategy.setHumanGuessHistory(this.guessHistory);
+      currentStrategy.setColourHistory(this.history);
+    }
+
+    Colour aiChoice = this.aiPlayer.getStrategy().chosenColour();
+    Colour aiGuess = this.aiPlayer.getStrategy().guessedColour();
+
+    // Power colour mechanic, used in round multiples of 3.
+    if (this.thisRound % 3 == 0) {
+      this.powerColour = Colour.getRandomColourForPowerColour();
+    } else {
+      this.powerColour = null;
+    }
+
+    // Handling point scoring, adding differing number of points for different cases
+    int humanScore = 0;
+    int aiScore = 0;
+    this.pointsScored = false;
+
+    if (humanGuess == aiChoice) {
+      humanScore += 1;
+      if (humanGuess == this.powerColour) {
+        humanScore += 2;
+      }
+    }
+
+    if (aiGuess == humanChoice) {
+      aiScore += 1;
+      this.pointsScored = true;
+      if (aiGuess == this.powerColour) {
+        aiScore += 2;
+      }
+    }
+
+    this.humanPlayer.addPoints(humanScore);
+    this.aiPlayer.addPoints(aiScore);
+    this.thisRound++;
+    this.humanPreviousChoice = humanChoice;
+
+    return new RoundResult(aiChoice, aiGuess, humanScore, aiScore, getPlayerScore(), getAiScore());
+  }
+
+  public boolean isGameOver() {
+    return !gameInProgress || this.thisRound > this.totalRounds;
+  }
+
+  public boolean isGameInProgress() {
+    return this.gameInProgress;
+  }
+
+  public int getCurrentRound() {
+    return this.thisRound;
+  }
+
+  public int getTotalRounds() {
+    return this.totalRounds;
+  }
+
+  public int getPlayerScore() {
+    return this.humanPlayer.getScore();
+  }
+
+  public int getAiScore() {
+    return this.aiPlayer.getScore();
+  }
+
+  public Colour getPowerColour() {
+    return this.powerColour;
+  }
+
+  public String getPlayerName() {
+    return this.humanPlayer.getName();
+  }
 }
