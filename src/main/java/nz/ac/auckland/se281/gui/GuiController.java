@@ -81,7 +81,6 @@ public class GuiController {
       defaultPlayerViewport = new Rectangle2D(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
       playerImageView.setViewport(defaultPlayerViewport);
 
-      // --- THIS IS THE FIX: Set win/loss round animations to loop indefinitely ---
       playerIdleAnimation =
           new LeftToRightSpriteAnimation(
               playerImageView, Duration.millis(800), 5, 5, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
@@ -89,11 +88,11 @@ public class GuiController {
       playerWinRoundAnimation =
           new LeftToRightSpriteAnimation(
               playerImageView, Duration.millis(500), 4, 4, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-      playerWinRoundAnimation.setCycleCount(Animation.INDEFINITE); // LOOPING
+      playerWinRoundAnimation.setCycleCount(Animation.INDEFINITE);
       playerLoseRoundAnimation =
           new LeftToRightSpriteAnimation(
               playerImageView, Duration.millis(400), 3, 3, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-      playerLoseRoundAnimation.setCycleCount(Animation.INDEFINITE); // LOOPING
+      playerLoseRoundAnimation.setCycleCount(Animation.INDEFINITE);
       playerLoseGameAnimation =
           new LeftToRightSpriteAnimation(
               playerImageView, Duration.millis(600), 4, 4, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
@@ -116,11 +115,11 @@ public class GuiController {
       aiWinRoundAnimation =
           new SpriteAnimation(
               aiImageView, Duration.millis(800), 8, 8, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-      aiWinRoundAnimation.setCycleCount(Animation.INDEFINITE); // LOOPING
+      aiWinRoundAnimation.setCycleCount(Animation.INDEFINITE);
       aiLoseRoundAnimation =
           new SpriteAnimation(
               aiImageView, Duration.millis(500), 3, 3, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-      aiLoseRoundAnimation.setCycleCount(Animation.INDEFINITE); // LOOPING
+      aiLoseRoundAnimation.setCycleCount(Animation.INDEFINITE);
       aiLoseGameAnimation =
           new SpriteAnimation(
               aiImageView, Duration.millis(1200), 7, 7, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
@@ -192,7 +191,6 @@ public class GuiController {
       aiWinRoundAnimation.play();
     }
 
-    // No matter the result (win, loss, or tie), transition to the "Next Round" button
     transitionToNextState();
   }
 
@@ -203,7 +201,7 @@ public class GuiController {
 
   @FXML
   public void handleNextRound(ActionEvent event) {
-    // --- THIS IS THE FIX ---
+
     // Stop all possible looping animations before proceeding.
     playerWinRoundAnimation.stop();
     playerLoseRoundAnimation.stop();

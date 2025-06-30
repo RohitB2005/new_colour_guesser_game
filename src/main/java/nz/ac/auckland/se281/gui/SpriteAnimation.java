@@ -42,12 +42,8 @@ public class SpriteAnimation extends Transition {
 
     final int index = Math.min((int) Math.floor(k * count), count - 1);
 
-    // --- THIS IS THE FIX ---
-    // We calculate the x-coordinate from the right edge of the animation strip.
-    // It starts at the last column and moves leftward as 'index' increases.
     final int x = ((columns - 1) - (index % columns)) * width + offsetX;
 
-    // The y-coordinate calculation remains the same
     final int y = (index / columns) * height + offsetY;
 
     // Set the "window" of the ImageView to show only the current frame

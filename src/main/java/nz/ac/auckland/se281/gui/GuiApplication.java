@@ -10,7 +10,7 @@ public class GuiApplication extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    // Load the FXML file which defines the layout of your GUI
+    // Load the FXML file
     FXMLLoader loader = new FXMLLoader(getClass().getResource("/layout.fxml"));
     Parent root = loader.load();
 
@@ -19,7 +19,7 @@ public class GuiApplication extends Application {
 
     scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
-    // Set up the main window (called a "Stage" in JavaFX)
+    // Set up the main window
     primaryStage.setTitle("Mind Game - Colour Guesser");
     primaryStage.setScene(scene);
     primaryStage.show();
