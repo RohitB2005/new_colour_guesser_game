@@ -51,10 +51,10 @@
                   <HBox fx:id="choiceBox" alignment="CENTER" spacing="15.0">
                      <children>
                         <!-- CHANGED prefWidth from 80.0 to 100.0 -->
-                        <Button onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="RED" />
-                        <Button onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="GREEN" />
-                        <Button onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="BLUE" />
-                        <Button onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="YELLOW" />
+                        <Button fx:id="choiceRedButton" onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="RED" />
+                        <Button fx:id="choiceGreenButton" onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="GREEN" />
+                        <Button fx:id="choiceBlueButton" onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="BLUE" />
+                        <Button fx:id="choiceYellowButton" onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="YELLOW" />
                      </children>
                   </HBox>
                </children>
@@ -65,10 +65,10 @@
                   <HBox fx:id="guessBox" alignment="CENTER" spacing="15.0">
                      <children>
                         <!-- CHANGED prefWidth from 80.0 to 100.0 -->
-                        <Button onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="RED" />
-                        <Button onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="GREEN" />
-                        <Button onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="BLUE" />
-                        <Button onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="YELLOW" />
+                        <Button fx:id="guessRedButton" onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="RED" />
+                        <Button fx:id="guessGreenButton"  onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="GREEN" />
+                        <Button fx:id="guessBlueButton" onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="BLUE" />
+                        <Button fx:id="guessYellowButton" onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="YELLOW" />
                      </children>
                   </HBox>
                </children>
