@@ -3,8 +3,8 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>SOFTENG281-2025</groupId>
-  <artifactId>assignment-2</artifactId>
-  <name>assignment-2</name>
+  <artifactId>mind-game-project</artifactId>
+  <name>Mind Game - AI Colour Guesser</name>
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
@@ -12,6 +12,7 @@
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <main.class>nz.ac.auckland.se281.Main</main.class>
   </properties>
   <dependencies>
     <dependency>
@@ -30,7 +31,7 @@
   <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>
-        <version>21.0.2</version> <!-- It's good practice to use the latest patch version -->
+        <version>21.0.2</version> 
     </dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
@@ -99,11 +100,33 @@
           <artifactId>javafx-maven-plugin</artifactId>
           <version>0.0.8</version>
           <configuration>
-              <!-- This is the only configuration needed -->
               <mainClass>nz.ac.auckland.se281.gui.GuiApplication</mainClass>
           </configuration>
       </plugin>
-
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>${main.class}</mainClass>
+            </manifest>
+          </archive>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
     </plugins>
   </build>

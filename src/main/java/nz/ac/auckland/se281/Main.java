@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import nz.ac.auckland.se281.cli.MessageCli;
 import nz.ac.auckland.se281.cli.Utils;
 import nz.ac.auckland.se281.engine.Game;
+import nz.ac.auckland.se281.gui.GuiApplication;
 
 /** You cannot modify this class! */
 public class Main {
@@ -102,7 +103,16 @@ public class Main {
   }
 
   public static void main(final String[] args) {
-    new Main(new Game()).start();
+    if (args.length > 0 && args[0].equalsIgnoreCase("--cli")) {
+      new Main(new Game()).start();
+    } else {
+      try {
+        javafx.application.Application.launch(GuiApplication.class, args);
+      } catch (Exception e) {
+        System.err.println("Error: Could not launch the GUI application.");
+        e.printStackTrace();
+      }
+    }
   }
 
   public static String help() {
@@ -237,7 +247,7 @@ public class Main {
         }
 
         // only if the input is fine, start a new game
-        game.newGame(Difficulty.valueOf(difficulty), numRounds, processOptions(command));
+        this.game.newGame(Difficulty.valueOf(difficulty), numRounds, processOptions(command));
         break;
       case PLAY:
         game.play();
