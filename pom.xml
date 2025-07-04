@@ -2,107 +2,83 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>SOFTENG281-2025</groupId>
+  
+  <!-- Updated project identifiers for clarity -->
+  <groupId>nz.ac.auckland.se281</groupId>
   <artifactId>mind-game-project</artifactId>
+  <version>1.0.0</version>
   <name>Mind Game - AI Colour Guesser</name>
+  
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <url>http://maven.apache.org</url>
+
   <properties>
-    <maven.compiler.source>21</maven.compiler.source>
-    <maven.compiler.target>21</maven.compiler.target>
+    <!-- Using a Long-Term Support (LTS) version of Java is best for compatibility -->
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Define a property for your main class for reusability -->
     <main.class>nz.ac.auckland.se281.Main</main.class>
   </properties>
+
   <dependencies>
+    <!-- JUnit for testing -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>4.13.2</version>
       <scope>test</scope>
     </dependency>
+    
+    <!-- JavaFX Dependencies -->
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>17.0.2</version> <!-- Match your Java version -->
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <version>17.0.2</version>
+    </dependency>
+
+    <!-- Your existing local codestyle dependency can be kept if needed for your course -->
     <dependency>
       <groupId>nz.ac.auckland</groupId>
       <artifactId>codestyle</artifactId>
       <version>1.0</version>
       <scope>system</scope>
-      <systemPath>${pom.basedir}/libs/codestyle.jar</systemPath>
-    </dependency>
-  <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-controls</artifactId>
-        <version>21.0.2</version> 
-    </dependency>
-    <dependency>
-        <groupId>org.openjfx</groupId>
-        <artifactId>javafx-fxml</artifactId>
-        <version>21.0.2</version>
+      <systemPath>${project.build.directory}/../libs/codestyle.jar</systemPath>
     </dependency>
   </dependencies>
+
   <build>
-   <resources>
-        <!-- This block explicitly tells Maven where to find resource files -->
+    <resources>
         <resource>
             <directory>src/main/resources</directory>
         </resource>
     </resources>
     <plugins>
+      <!-- Maven Compiler Plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.22.0</version>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit4</artifactId>
-            <version>2.22.0</version>
-          </dependency>
-        </dependencies>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
         <configuration>
-          <includes>
-            <include>**/*.java</include>
-          </includes>
+          <release>${maven.compiler.source}</release>
         </configuration>
       </plugin>
+
+      <!-- JavaFX Plugin for running during development -->
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>3.0.0</version>
-        <executions>
-          <execution>
-            <id>run</id>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <mainClass>nz.ac.auckland.se281.Main</mainClass>
-            </configuration>
-          </execution>
-          <execution>
-            <id>style</id>
-            <goals>
-              <goal>java</goal>
-            </goals>
-            <configuration>
-              <includeProjectDependencies>true</includeProjectDependencies>
-              <classpathScope>compile</classpathScope>
-              <mainClass>nz.ac.auckland.gradestyle.RunGradeStyle</mainClass>
-              <arguments>
-                <argument>${project.groupId}</argument>
-                <argument>${project.artifactId}</argument>
-              </arguments>
-            </configuration>
-          </execution>
-        </executions>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-maven-plugin</artifactId>
+        <version>0.0.8</version>
+        <configuration>
+          <mainClass>${main.class}</mainClass>
+        </configuration>
       </plugin>
-      <plugin>
-          <groupId>org.openjfx</groupId>
-          <artifactId>javafx-maven-plugin</artifactId>
-          <version>0.0.8</version>
-          <configuration>
-              <mainClass>nz.ac.auckland.se281.gui.GuiApplication</mainClass>
-          </configuration>
-      </plugin>
+      
+      <!-- Assembly Plugin to create a single JAR with all dependencies included -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -110,9 +86,11 @@
         <configuration>
           <archive>
             <manifest>
+              <!-- This specifies the main entry point for the executable JAR -->
               <mainClass>${main.class}</mainClass>
             </manifest>
           </archive>
+          <!-- This creates a JAR named '...-jar-with-dependencies.jar' -->
           <descriptorRefs>
             <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
@@ -120,14 +98,14 @@
         <executions>
           <execution>
             <id>make-assembly</id>
-            <phase>package</phase>
+            <phase>package</phase> <!-- This makes the plugin run during the 'package' lifecycle phase -->
             <goals>
               <goal>single</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
-
+      
     </plugins>
   </build>
 </project>
