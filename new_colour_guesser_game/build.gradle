@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation files('lib/javafx-sdk-21.0.7/lib/*')
+}
+
+application {
+    mainClassName = 'nz.ac.auckland.se281.Main'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'nz.ac.auckland.se281.Main'
+        )
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
