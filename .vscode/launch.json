@@ -8,7 +8,6 @@
       "mainClass": "nz.ac.auckland.se281.Main",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
-      "preLaunchTask": "mvn: javafx:run"
     },
     {
       "type": "java",
