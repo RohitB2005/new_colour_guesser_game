@@ -50,7 +50,6 @@
                   <Label text="1. Choose Your Colour"><font><Font name="Arial Bold" size="20.0" /></font></Label>
                   <HBox fx:id="choiceBox" alignment="CENTER" spacing="15.0">
                      <children>
-                        <!-- CHANGED prefWidth from 80.0 to 100.0 -->
                         <Button fx:id="choiceRedButton" onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="RED" />
                         <Button fx:id="choiceGreenButton" onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="GREEN" />
                         <Button fx:id="choiceBlueButton" onAction="#handleColorChoice" prefHeight="80.0" prefWidth="100.0" text="BLUE" />
@@ -64,7 +63,6 @@
                   <Label text="2. Guess HAL's Colour"><font><Font name="Arial Bold" size="20.0" /></font></Label>
                   <HBox fx:id="guessBox" alignment="CENTER" spacing="15.0">
                      <children>
-                        <!-- CHANGED prefWidth from 80.0 to 100.0 -->
                         <Button fx:id="guessRedButton" onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="RED" />
                         <Button fx:id="guessGreenButton"  onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="GREEN" />
                         <Button fx:id="guessBlueButton" onAction="#handleGuessChoice" prefHeight="80.0" prefWidth="100.0" text="BLUE" />
