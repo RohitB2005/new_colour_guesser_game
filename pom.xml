@@ -47,7 +47,7 @@
       <artifactId>codestyle</artifactId>
       <version>1.0</version>
       <scope>system</scope>
-      <systemPath>${project.build.directory}/../libs/codestyle.jar</systemPath>
+      <systemPath>${project.basedir}/libs/codestyle.jar</systemPath>
     </dependency>
   </dependencies>
 
